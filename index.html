@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>吴梦轩 - AI直播运营操盘手</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0C0C0C;
+      --surface: #131313;
+      --text: #D7E2EA;
+      --muted: #6B7280;
+      --stroke: #1F1F1F;
+      --accent: #FFFFFF;
+    }
+
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: clip;
+      padding: 0 60px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--stroke);
+      border-radius: 4px;
+    }
+
+    .hero-heading {
+      background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Contact Button Gradient */
+    .contact-gradient {
+      background: linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%);
+      box-shadow: 0px 4px 4px rgba(181, 1, 167, 0.25), 4px 4px 12px #7721B1 inset;
+    }
+
+    /* FadeIn base */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    /* Marquee */
+    .marquee-section {
+      padding-top: 80px;
+      padding-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .marquee-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .marquee-row img {
+      width: 420px;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 16px;
+      will-change: transform;
+      flex-shrink: 0;
+    }
+
+    /* Services Section */
+    .services-section {
+      background: #FFFFFF;
+      border-radius: 60px 60px 0 0;
+      padding: 80px 40px;
+    }
+
+    .service-item {
+      display: flex;
+      gap: 40px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(12, 12, 12, 0.15);
+      align-items: flex-start;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .service-item:hover {
+      transform: translateX(10px);
+      background: rgba(138, 92, 245, 0.05);
+      padding-left: 20px;
+      border-radius: 20px;
+    }
+
+    .service-item:last-child {
+      border-bottom: 1px solid rgba(12, 12, 12, 0.15);
+    }
+
+    .service-number {
+      font-size: clamp(48px, 10vw, 140px);
+      font-weight: 900;
+      color: #0C0C0C;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .service-item:hover .service-number {
+      transform: scale(1.1);
+      color: #8A5CF5;
+    }
+
+    .service-info h3 {
+      font-size: clamp(16px, 2.2vw, 32px);
+      font-weight: 500;
+      text-transform: uppercase;
+      color: #0C0C0C;
+      margin-bottom: 12px;
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .service-info h3::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #8A5CF5;
+      transition: width 0.3s ease;
+    }
+
+    .service-info h3:hover::after {
+      width: 100%;
+    }
+
+    .tooltip-trigger {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .service-item:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -250px;
+      left: 550px;
+      width: 500px;
+      padding: 30px;
+      background: rgba(12, 12, 12, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 100;
+      pointer-events: none;
+      margin-top: 16px;
+    }
+
+    .tooltip h4 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+
+    .tooltip .company {
+      font-size: 14px;
+      color: #8A5CF5;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .tooltip .time {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .tooltip ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tooltip ul li {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.7;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tooltip ul li:last-child {
+      border-bottom: none;
+    }
+
+    .tooltip ul li::before {
+      content: '→';
+      color: #8A5CF5;
+      margin-right: 12px;
+      font-weight: bold;
+    }
+
+    .service-info p {
+      font-size: clamp(14px, 1.6vw, 20px);
+      font-weight: 300;
+      color: #0C0C0C;
+      opacity: 0.6;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Projects Section */
+    .projects-section {
+      background: var(--bg);
+      border-radius: 60px 60px 0 0;
+      margin-top: -40px;
+      z-index: 10;
+      position: relative;
+      padding: 80px 40px;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 2px solid var(--text);
+      border-radius: 60px;
+      padding: 24px;
+      margin-bottom: 40px;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: #8A5CF5;
+      box-shadow: 0 30px 60px rgba(138, 92, 245, 0.2);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 40% 60%;
+      gap: 16px;
+      margin-top: 24px;
+      align-items: center;
+    }
+
+    .project-grid-left {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .project-grid-left img,
+    .project-grid-right img {
+      transition: all 0.5s ease;
+    }
+
+    .project-card:hover .project-grid-left img {
+      transform: scale(1.05) rotate(-1deg);
+    }
+
+    .project-card:hover .project-grid-right img {
+      transform: scale(1.03);
+    }
+
+    .project-grid-left img {
+      height: clamp(130px, 16vw, 230px);
+      width: 100%;
+      object-fit: cover;
+      border-radius: 40px;
+    }
+
+    .project-grid-right img {
+      width: 100%;
+      height: clamp(200px, 30vw, 400px);
+      object-fit: cover;
+      border-radius: 40px;
+    }
+
+    .project-number {
+      font-size: clamp(80px, 15vw, 200px);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 0.8;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: var(--bg);
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .contact-email {
+      display: inline-block;
+      padding: 16px 48px;
+      border: 2px solid var(--text);
+      border-radius: 50px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.3s;
+    }
+
+    .contact-email:hover {
+      background: rgba(215, 226, 234, 0.1);
+      transform: scale(1.05);
+      border-color: #8A5CF5;
+      color: #8A5CF5;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--stroke);
+    }
+
+    /* Jellybean Background */
+    .jellybean {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Portrait Container */
+    .portrait-container {
+      will-change: transform;
+    }
+
+    /* Blob Animation */
+    @keyframes blobMorph {
+
+      0%,
+      100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      }
+
+      50% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bounce-in {
+      0% {
+        transform: scale(0) translateY(100px);
+        opacity: 0;
+      }
+
+      50% {
+        transform: scale(1.1) translateY(-20px);
+      }
+
+      70% {
+        transform: scale(0.95) translateY(5px);
+      }
+
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        transform: scaleY(1);
+      }
+
+      50% {
+        transform: scaleY(0.1);
+      }
+    }
+
+    @keyframes bubble-pulse {
+
+      0%,
+      100% {
+        transform: scale(0.8);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    .blob-character {
+      animation: blobMorph 4s ease-in-out infinite, float 3s ease-in-out infinite;
+    }
+
+    /* Section titles animation */
+    .section-title {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(12, 12, 12, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px;
+    }
+
+    .nav-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #8A5CF5;
+      transition: width 0.3s ease;
+    }
+
+    .nav-btn:hover::after {
+      width: 100%;
+    }
+
+    /* Hero entrance animation */
+    .hero-title-line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-title-line span {
+      display: block;
+      animation: slide-up 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    @keyframes slide-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* CTA Button animation */
+    .cta-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cta-btn:hover::before {
+      left: 100%;
+    }
+
+    /* Tag hover animation */
+    .project-tag {
+      transition: all 0.3s ease;
+    }
+
+    .project-tag:hover {
+      transform: rotate(5deg) scale(1.1);
+    }
+
+    /* Input focus animation */
+    .form-input {
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: #8A5CF5;
+      box-shadow: 0 0 20px rgba(138, 92, 245, 0.2);
+      transform: scale(1.02);
+    }
+
+    /* Available dot pulse */
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+      }
+    }
+
+    /* Magnetic button effect */
+    .magnetic-btn {
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .service-item {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-grid-right img {
+        height: 250px;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Jellybean Background -->
+  <div class="jellybean"
+    style="width: 80px; height: 60px; background: #FFF59D; top: 15%; left: 10%; animation: float 4s ease-in-out infinite;">
+  </div>
+  <div class="jellybean"
+    style="width: 100px; height: 70px; background: #E1CBFC; top: 25%; right: 10%; animation: float 5s ease-in-out infinite 0.5s;">
+  </div>
+  <div class="jellybean"
+    style="width: 60px; height: 50px; background: #FFADE5; bottom: 20%; left: 5%; animation: float 4.5s ease-in-out infinite 1s;">
+  </div>
+  <div class="jellybean"
+    style="width: 90px; height: 65px; background: #E1CBFC; bottom: 30%; right: 15%; animation: float 5.5s ease-in-out infinite 1.5s;">
+  </div>
+
+  <div style="min-height: 100vh;">
+    <!-- Hero Section -->
+    <section id="home" class="hero"
+      style="height: 100vh; display: flex; flex-direction: column; position: relative; overflow-x: clip;">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <div style="flex: 1;"></div>
+        <div style="display: flex; gap: 16px; align-items: center; flex: 2; justify-content: center;">
+          <a href="#home" class="nav-btn"
+            style="color: #FFFFFF; font-weight: 500; letter-spacing: 0.05em; font-size: 13px; padding: 12px 24px; border-radius: 50px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s; white-space: nowrap;">首页</a>
+          <a href="#about" class="nav-btn"
+            style="color: #FFFFFF; font-weight: 500; letter-spacing: 0.05em; font-size: 13px; padding: 12px 24px; border-radius: 50px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s; white-space: nowrap;">关于我</a>
+          <a href="#projects" class="nav-btn"
+            style="color: #FFFFFF; font-weight: 500; letter-spacing: 0.05em; font-size: 13px; padding: 12px 24px; border-radius: 50px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s; white-space: nowrap;">项目</a>
+          <a href="#product" class="nav-btn"
+            style="color: #FFFFFF; font-weight: 500; letter-spacing: 0.05em; font-size: 13px; padding: 12px 24px; border-radius: 50px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s; white-space: nowrap;">产品</a>
+        </div>
+        <div style="flex: 1;"></div>
+      </nav>
+
+      <!-- Hero Content -->
+      <div
+        style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 40px; padding-bottom: 40px; position: relative;">
+        <h1
+          style="font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1; font-size: clamp(48px, 12vw, 160px); color: #FFFFFF; position: absolute; top: 110px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; z-index: 20;">
+          <span style="display: block; opacity: 1;">HI！我是梦轩</span>
+        </h1>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px;">
+          <p id="heroSubtitle"
+            style="font-size: clamp(12px, 1.4vw, 18px); font-weight: 300; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.5; color: #D7E2EA; opacity: 0; white-space: normal; display: inline-block;">
+            <span class="typewriter"></span><span class="cursor">|</span>
+          </p>
+          <style>
+            .typewriter {
+              display: inline-block;
+              overflow: hidden;
+              white-space: nowrap;
+              width: 0;
+              animation: typing 2.5s steps(30) 1s forwards;
+            }
+
+            .cursor {
+              display: inline-block;
+              animation: blink 0.7s step-end infinite;
+              color: #D7E2EA;
+            }
+
+            @keyframes typing {
+              from {
+                width: 0;
+                opacity: 1;
+              }
+
+              to {
+                width: 100%;
+                opacity: 1;
+              }
+            }
+
+            @keyframes blink {
+              50% {
+                opacity: 0;
+              }
+            }
+          </style>
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const text = ['帮品牌用AI直播引爆日均百万GMV', '78个项目100%交付'];
+              const typewriter = document.querySelector('.typewriter');
+              if (typewriter) {
+                typewriter.innerHTML = text[0] + '<br>' + text[1];
+              }
+            });
+          </script>
+          <a href="#contact" class="contact-gradient cta-btn magnetic-btn"
+            style="display: inline-block; padding: 16px 48px; border-radius: 50px; color: white; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; border: 2px solid white; opacity: 0; transform: translateY(20px);">
+            联系我
+          </a>
+        </div>
+      </div>
+
+      <!-- Chat Bubble -->
+      <div id="chatBubble" style="position: absolute; right: 280px; top: 270px; z-index: 100; cursor: pointer;"
+        onclick="toggleChat()">
+        <div
+          style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 16px 24px; border-radius: 24px; box-shadow: 0 10px 40px rgba(138, 92, 245, 0.4);">
+          <span style="color: white; font-weight: 600; font-size: 14px;">点击开始了解我</span>
+        </div>
+        <div
+          style="width: 20px; height: 20px; background: #F94A9C; position: absolute; bottom: -10px; left: 30px; transform: rotate(45deg);">
+        </div>
+      </div>
+
+      <!-- Chat Dialog -->
+      <div id="chatDialog"
+        style="display: none; position: fixed; right: 40px; top: 50%; transform: translateY(-50%); width: 400px; max-height: 600px; background: rgba(12, 12, 12, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); z-index: 1000; overflow: hidden;">
+        <div
+          style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h4 style="color: white; font-size: 18px; font-weight: 700; margin: 0;">AI 助手</h4>
+            <p style="color: rgba(255,255,255,0.8); font-size: 12px; margin: 4px 0 0 0;">关于吴梦轩的任何问题都可以问我</p>
+          </div>
+          <button onclick="toggleChat()"
+            style="background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+        <div id="chatMessages"
+          style="height: 400px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="background: rgba(138, 92, 245, 0.2); padding: 16px; border-radius: 16px; max-width: 80%;">
+            <p style="color: #D7E2EA; font-size: 14px; line-height: 1.6; margin: 0;">
+              你好！我是吴梦轩的AI助手。有什么想了解关于我的经历、技能或项目经验的问题吗？可以问我哦！</p>
+          </div>
+        </div>
+        <div style="padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 12px;">
+          <input id="chatInput" type="text" placeholder="输入你的问题..." onkeypress="if(event.key==='Enter')sendMessage()"
+            style="flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 12px 16px; color: white; font-size: 14px; outline: none;">
+          <button onclick="sendMessage()"
+            style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); border: none; border-radius: 12px; padding: 12px 20px; color: white; font-weight: 600; cursor: pointer;">发送</button>
+        </div>
+      </div>
+
+      <!-- Portrait -->
+      <div class="portrait-container"
+        style="position: absolute; left: 50%; transform: translateX(-50%) translateY(80px); bottom: 0; z-index: 10;">
+        <img src="logo.png" alt="梦轩" style="width: clamp(280px, 40vw, 520px); height: auto; object-fit: cover;">
+      </div>
+    </section>
+
+    <!-- Personal Strengths Section -->
+    <section class="marquee-section" style="background: var(--bg);">
+      <h2
+        style="font-size: clamp(32px, 8vw, 80px); font-weight: 900; color: #FFFFFF; text-align: center; margin-bottom: 60px; text-transform: uppercase;">
+        个人优势</h2>
+      <div class="marquee-row" id="marqueeRow1">
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #8A5CF5 0%, #F94A9C 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">01</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">AI直播运营</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">78个项目100%交付</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #F94A9C 0%, #FF6BB2 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">02</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">数字人专家</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">评论回复率95%</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #FF6BB2 0%, #FFB6D9 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">03</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">数据驱动</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">SQL/Python/Excel分析</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #8A5CF5 0%, #BE4C00 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">04</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">跨部门协作</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">技术、设计、运营对接</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #B600A8 0%, #7621B0 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">05</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">GMV 2856万</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">波司登双店累计</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #18011F 0%, #8A5CF5 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">06</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">AI工具应用</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">数字人、AIGC、智能客服</p>
+        </div>
+      </div>
+      <div class="marquee-row" id="marqueeRow2">
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">07</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">转粉率+49%</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">领先真人直播</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">08</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">ROI超2500+</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">投资回报率超高</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">09</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">100%交付率</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">78个项目全部完成</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">10</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">24小时运营</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">不间断获客引擎</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">11</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">体验优化</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">数据驱动用户体验</p>
+        </div>
+        <div
+          style="width: 420px; height: 180px; background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0;">
+          <span
+            style="font-size: clamp(16px, 3vw, 47px); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">12</span>
+          <h3 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">Vibe Coding</h3>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">AI想法快速落地</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about"
+      style="min-height: 100vh; padding: 80px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; background: var(--bg);">
+      <h2 class="section-title hero-heading"
+        style="font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; font-size: clamp(48px, 12vw, 160px); text-align: center; margin-bottom: 60px;">
+        关于我
+      </h2>
+
+      <div style="max-width: 700px; text-align: center;">
+        <p class="fade-in"
+          style="font-size: clamp(16px, 2vw, 22px); font-weight: 400; line-height: 1.8; color: #D7E2EA; margin-bottom: 24px;">
+          我出生于 2002 年 11 月，来自宁夏的一个小镇。毕业于天津中德应用技术大学通信工程专业。
+        </p>
+        <p class="fade-in"
+          style="font-size: clamp(16px, 2vw, 22px); font-weight: 400; line-height: 1.8; color: #D7E2EA; margin-bottom: 24px; animation-delay: 0.1s;">
+          目前还是持续进化的学习型选手，主打一个边学边打，但坚信菜鸟终会进化成靠谱实干派。Anyway，欢迎来到我的世界！
+        </p>
+        <p class="fade-in"
+          style="font-size: clamp(16px, 2vw, 22px); font-weight: 400; line-height: 1.8; color: #D7E2EA; margin-bottom: 24px; animation-delay: 0.2s;">
+          因为真心热爱 AI，毕业后我直接进入 AI 数字人领域，做AI 产品落地与运营。过去一年多，我负责把 AI 产品从 0 到 1 跑通，独立完成 78 个品牌数字人直播间的产品化搭建与交付。
+        </p>
+        <p class="fade-in"
+          style="font-size: clamp(16px, 2vw, 22px); font-weight: 400; line-height: 1.8; color: #D7E2EA; animation-delay: 0.3s;">
+          最近沉迷 vibe coding，喜欢用代码把脑子里的 AI 想法快速变成现实，边玩边做产品，快乐运营～
+        </p>
+      </div>
+
+      <a href="#contact" class="fade-in magnetic-btn"
+        style="display: inline-block; margin-top: 60px; padding: 16px 48px; border: 2px solid #D7E2EA; border-radius: 50px; color: #D7E2EA; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; transition: all 0.3s; animation-delay: 0.4s;"
+        onmouseover="this.style.background='rgba(138,92,245,0.1)';this.style.borderColor='#8A5CF5';this.style.color='#8A5CF5'"
+        onmouseout="this.style.background='transparent';this.style.borderColor='#D7E2EA';this.style.color='#D7E2EA'">
+        联系我
+      </a>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+      <h2 class="section-title"
+        style="font-weight: 900; text-transform: uppercase; text-align: center; font-size: clamp(48px, 12vw, 160px); color: #0C0C0C; margin-bottom: 80px;">
+        工作经历
+      </h2>
+
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <div class="service-item">
+          <span class="service-number">•</span>
+          <div class="service-info">
+            <div class="tooltip-trigger">
+              <h3>项目管理PM 2025.4</h3>
+              <p>主导数字人直播项目从0到1的交付全流程，累计完成78个数字人直播间的搭建与交付，覆盖高端美妆、3C、服饰、家清、母婴等多类目，交付上线率100%。
+              </p>
+              <div class="tooltip">
+                <h4>项目管理PM</h4>
+                <div class="company">北京广益集思科技有限公司</div>
+                <div class="time">2025.04 - 至今</div>
+                <ul>
+                  <li>主导数字人直播项目从0到1的交付全流程，累计完成78个数字人直播间的搭建与交付，覆盖高端美妆、3C、服饰、家清、母婴等多类目，交付上线率100%。</li>
+                  <li>为波司登、联想、cpb等头部品牌定制专属数字人直播，通过数据分析与用户反馈，持续优化直播间互动话术与转化路径，单项目日GMV达134万元，提升互动率13%。</li>
+                  <li>协调内部技术、设计资源，处理突发技术故障，保障直播流畅度，确保项目按期上线。</li>
+                  <li>自主研发知识库自动化工具，替代人工拆解流程，整体效率提升50%。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-item">
+          <span class="service-number">•</span>
+          <div class="service-info">
+            <div class="tooltip-trigger">
+              <h3>直播运营实习生 2024.10</h3>
+              <p>负责直播间实时盯盘，对未付款订单进行跟进，提高订单转化率；根据流量曲线调整直播节奏，关注曝光观看率、商品点击等关键指标。</p>
+              <div class="tooltip">
+                <h4>直播运营实习生</h4>
+                <div class="company">北京好未来</div>
+                <div class="time">2024.10 - 2025.04</div>
+                <ul>
+                  <li>负责直播间实时盯盘，对未付款订单进行跟进，提高订单转化率；根据流量曲线调整直播节奏，关注曝光观看率、商品点击等关键指标。</li>
+                  <li>参与直播复盘与用户画像分析，通过数据调整运营策略，推动直播间新增粉丝突破2000+，日均GMV提升至40万+，ROI稳定在2.7。</li>
+                  <li>协助策划直播内容与互动玩法，提升用户参与度，保障直播质量持续提升。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects-section">
+      <h2 class="section-title hero-heading"
+        style="font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; font-size: clamp(48px, 12vw, 160px); margin-bottom: 80px; text-align: center;">
+        项目
+      </h2>
+
+      <!-- Project 1: 波司登 -->
+      <div class="project-card fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+          <div>
+            <span class="project-number">01</span>
+            <span
+              style="display: block; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px;">数字人直播</span>
+          </div>
+          <div style="text-align: right;">
+            <h3
+              style="font-size: clamp(24px, 3vw, 40px); font-weight: 700; color: var(--text); text-transform: uppercase; margin-bottom: 8px;">
+              波司登</h3>
+            <span
+              style="display: inline-block; padding: 8px 24px; border: 2px solid var(--text); border-radius: 50px; color: var(--text); font-size: clamp(16px, 3vw, 47px); text-transform: uppercase; letter-spacing: 0.1em;">客户项目</span>
+          </div>
+        </div>
+        <div class="project-grid">
+          <div class="project-grid-left"
+            style="flex: 0 0 40%; display: flex; align-items: center; justify-content: center;">
+            <div style="height: 33%; width: 55%;">
+              <video src="https://myoneai-1439423496.cos.ap-beijing.myqcloud.com/%E6%B3%A2%E5%8F%B8%E7%99%BB.mp4" controls
+                style="width: 100%; height: 100%; border-radius: 20px; object-fit: contain;"></video>
+            </div>
+          </div>
+          <div class="project-grid-right" style="flex: 1; padding: 20px; display: flex; align-items: center;">
+            <div style="background: var(--surface); border-radius: 24px; padding: 30px; width: 100%;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div
+                  style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">2856万</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">累计GMV</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #10B981, #059669); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">95%</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">互动回复率</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #F59E0B, #D97706); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">2500+</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">ROI</div>
+                </div>
+              </div>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">核心职责</h4>
+              <ul
+                style="font-size: 14px; color: var(--text); line-height: 1.8; list-style: none; padding: 0; margin: 0 0 20px 0;">
+                <li style="margin-bottom: 8px;">• 搭建数字人智能问答体系，用户评论回复率95%</li>
+                <li style="margin-bottom: 8px;">• 数据驱动运营优化，转粉率领先真人49%</li>
+                <li>• 24小时不间断直播，突破真人直播时长限制</li>
+              </ul>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">业务成果</h4>
+              <p style="font-size: 14px; color: var(--text); line-height: 1.6;">
+                双店累计GMV 2856万元，AI直播转化效率达真人直播76%，实现低成本高效AI直播运营
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: 联想 -->
+      <div class="project-card fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+          <div>
+            <span class="project-number">02</span>
+            <span
+              style="display: block; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px;">24小时轮播</span>
+          </div>
+          <div style="text-align: right;">
+            <h3
+              style="font-size: clamp(24px, 3vw, 40px); font-weight: 700; color: var(--text); text-transform: uppercase; margin-bottom: 8px;">
+              联想</h3>
+            <span
+              style="display: inline-block; padding: 8px 24px; border: 2px solid var(--text); border-radius: 50px; color: var(--text); font-size: clamp(16px, 3vw, 47px); text-transform: uppercase; letter-spacing: 0.1em;">客户项目</span>
+          </div>
+        </div>
+        <div class="project-grid">
+          <div class="project-grid-left"
+            style="flex: 0 0 40%; display: flex; align-items: center; justify-content: center;">
+            <div style="height: 33%; width: 55%;">
+              <video src="https://myoneai-1439423496.cos.ap-beijing.myqcloud.com/%E8%81%94%E6%83%B3%E5%A4%A9%E7%8C%AB.mp4" controls
+                style="width: 100%; height: 100%; border-radius: 20px; object-fit: contain;"></video>
+            </div>
+          </div>
+          <div class="project-grid-right" style="flex: 1; padding: 20px; display: flex; align-items: center;">
+            <div style="background: var(--surface); border-radius: 24px; padding: 30px; width: 100%;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div
+                  style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">134万</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">单日GMV</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #3B82F6, #1D4ED8); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">+13%</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">互动率提升</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #10B981, #059669); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">100%</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">交付率</div>
+                </div>
+              </div>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">核心职责</h4>
+              <ul
+                style="font-size: 14px; color: var(--text); line-height: 1.8; list-style: none; padding: 0; margin: 0 0 20px 0;">
+                <li style="margin-bottom: 8px;">• 搭建数字人智能问答体系，协同算法团队优化用户体验</li>
+                <li style="margin-bottom: 8px;">• 搭建数据监控体系，跟踪用户行为与核心指标</li>
+                <li>• 推动数字人直播标准化，提升公域流量转化效率</li>
+              </ul>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">业务成果</h4>
+              <p style="font-size: 14px; color: var(--text); line-height: 1.6;">
+                单项目日GMV达134万元，直播间互动率提升13%，实现3C品类AI直播高效商业化落地
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: JIL SANDER -->
+      <div class="project-card fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+          <div>
+            <span class="project-number">03</span>
+            <span
+              style="display: block; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px;">数字人直播</span>
+          </div>
+          <div style="text-align: right;">
+            <h3
+              style="font-size: clamp(24px, 3vw, 40px); font-weight: 700; color: var(--text); text-transform: uppercase; margin-bottom: 8px;">
+              JIL SANDER</h3>
+            <span
+              style="display: inline-block; padding: 8px 24px; border: 2px solid var(--text); border-radius: 50px; color: var(--text); font-size: clamp(16px, 3vw, 47px); text-transform: uppercase; letter-spacing: 0.1em;">客户项目</span>
+          </div>
+        </div>
+        <div class="project-grid">
+          <div class="project-grid-left"
+            style="flex: 0 0 40%; display: flex; align-items: center; justify-content: center;">
+            <div style="height: 33%; width: 55%;">
+              <video src="https://myoneai-1439423496.cos.ap-beijing.myqcloud.com/jil%20sander.mp4" controls
+                style="width: 100%; height: 100%; border-radius: 20px; object-fit: contain;"></video>
+            </div>
+          </div>
+          <div class="project-grid-right" style="flex: 1; padding: 20px; display: flex; align-items: center;">
+            <div style="background: var(--surface); border-radius: 24px; padding: 30px; width: 100%;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div
+                  style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">高端</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">奢品定位</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #10B981, #059669); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">24h</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">不间断直播</div>
+                </div>
+                <div
+                  style="background: linear-gradient(135deg, #F59E0B, #D97706); padding: 20px; border-radius: 16px; text-align: center;">
+                  <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">+38%</div>
+                  <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">转化提升</div>
+                </div>
+              </div>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">核心职责</h4>
+              <ul
+                style="font-size: 14px; color: var(--text); line-height: 1.8; list-style: none; padding: 0; margin: 0 0 20px 0;">
+                <li style="margin-bottom: 8px;">• 为JIL SANDER定制超写实数字人形象，匹配品牌高端调性</li>
+                <li style="margin-bottom: 8px;">• 搭建奢品专属话术体系，提升用户互动体验</li>
+                <li>• 实现24小时不间断直播，突破真人直播时长限制</li>
+              </ul>
+              <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">业务成果</h4>
+              <p style="font-size: 14px; color: var(--text); line-height: 1.6;">
+                数字人直播助力高端奢品拓展线上渠道，24小时不间断运营，转化率提升38%
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="product" class="contact-section" style="padding: 100px 40px;">
+      <h2 class="section-title hero-heading"
+        style="font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; font-size: clamp(48px, 10vw, 120px); margin-bottom: 40px; text-align: center;">
+        产品
+      </h2>
+      <div class="project-card fade-in" style="max-width: 900px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+          <div>
+            <span class="project-number">01</span>
+            <span
+              style="display: block; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px;">AI工具</span>
+          </div>
+          <div style="text-align: right;">
+            <h3
+              style="font-size: clamp(24px, 3vw, 40px); font-weight: 700; color: var(--text); text-transform: uppercase; margin-bottom: 8px;">
+              产品信息拆解工具
+            </h3>
+            <a href="https://www.xuanss.top/" target="_blank"
+              style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #8A5CF5, #F94A9C); border-radius: 50px; color: #FFFFFF; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none;">
+              访问产品 →
+            </a>
+          </div>
+        </div>
+        <div style="background: var(--surface); border-radius: 24px; padding: 30px;">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+            <div
+              style="background: linear-gradient(135deg, #8A5CF5, #F94A9C); padding: 20px; border-radius: 16px; text-align: center;">
+              <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">60%</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">效率提升</div>
+            </div>
+            <div
+              style="background: linear-gradient(135deg, #10B981, #059669); padding: 20px; border-radius: 16px; text-align: center;">
+              <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">0依赖</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">摆脱排期</div>
+            </div>
+            <div
+              style="background: linear-gradient(135deg, #F59E0B, #D97706); padding: 20px; border-radius: 16px; text-align: center;">
+              <div style="font-size: 32px; font-weight: 800; color: #FFFFFF;">自动化</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase;">全流程</div>
+            </div>
+          </div>
+          <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">痛点问题</h4>
+          <p style="font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 20px;">
+            数字人项目知识库搭建需人工拆解产品文案、搭建问答知识库，流程长、依赖文案排期，效率低。
+          </p>
+          <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">解决方案</h4>
+          <ul
+            style="font-size: 14px; color: var(--text); line-height: 1.8; list-style: none; padding: 0; margin: 0 0 20px 0;">
+            <li style="margin-bottom: 8px;">• 调研运营/文案协作痛点，梳理知识库搭建SOP</li>
+            <li style="margin-bottom: 8px;">• 按服饰 / 美妆 / 3C 等类目设计规则引擎，实现自动化内容拆解、问答生成</li>
+            <li>• 通过 vibe coding 完成工具开发，打通表格上传→规则匹配→导出可用知识库全流程</li>
+          </ul>
+          <h4 style="font-size: 18px; font-weight: 700; color: #8A5CF5; margin-bottom: 12px;">核心成果</h4>
+          <p style="font-size: 14px; color: var(--text); line-height: 1.6;">
+            替代人工拆解环节，运营可独立完成知识库搭建，流程效率提升60%，输出标准化问答内容，降低错误率
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <h2 class="section-title hero-heading"
+        style="font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; font-size: clamp(48px, 10vw, 120px); margin-bottom: 40px;">
+        联系我
+      </h2>
+      <p class="fade-in"
+        style="font-size: 18px; color: var(--muted); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; text-align: center;">
+        都看到这里了，快来联系我吧，全天在线，随时可call！
+      </p>
+      <a href="mailto:2894173701@qq.com" class="contact-email magnetic-btn">
+        2894173701@qq.com
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        <p style="font-size: 14px; color: var(--muted);">吴梦轩 &copy; 2026</p>
+      </div>
+      <div style="display: flex; gap: 24px; align-items: center;">
+        <a href="tel:18709571453" style="color: var(--text); font-size: 14px;">电话: 18709571453</a>
+        <a href="mailto:2894173701@qq.com" style="color: var(--text); font-size: 14px;">邮箱: 2894173701@qq.com</a>
+        <span style="color: var(--text); font-size: 14px;">微信: WSSXX1453</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="pulse-dot" style="width: 8px; height: 8px; background: #10B981; border-radius: 50%;"></span>
+        <span
+          style="font-size: clamp(16px, 3vw, 47px); color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;">求职中</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Hero entrance animation
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .to('#portrait', {
+        opacity: 1,
+        duration: 1.2,
+        y: 0,
+        delay: 0.2,
+        from: { y: 100 }
+      })
+      .to('#heroSubtitle', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8
+      }, '-=0.4')
+      .to('.cta-btn', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6
+      }, '-=0.3');
+
+    // Portrait parallax effect
+    const portraitContainer = document.querySelector('.portrait-container');
+    let mouseX = 0, mouseY = 0;
+    let portraitX = 0, portraitY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 10;
+    });
+
+    function animatePortrait() {
+      portraitX += (mouseX - portraitX) * 0.1;
+      portraitY += (mouseY - portraitY) * 0.1;
+
+      if (portraitContainer) {
+        portraitContainer.style.transform = `translateX(calc(-50% + ${portraitX}px)) translateY(${portraitY}px)`;
+      }
+      requestAnimationFrame(animatePortrait);
+    }
+    animatePortrait();
+
+    // Marquee scroll effect
+    const marqueeRow1 = document.getElementById('marqueeRow1');
+    const marqueeRow2 = document.getElementById('marqueeRow2');
+
+    // Set initial positions
+    gsap.set(marqueeRow1, { x: 0 });
+    gsap.set(marqueeRow2, { x: 0 });
+
+    gsap.to(marqueeRow1, {
+      x: () => window.scrollY * 0.3,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.marquee-section',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    gsap.to(marqueeRow2, {
+      x: () => -window.scrollY * 0.3,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.marquee-section',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Fade-in animations for sections
+    gsap.utils.toArray('.fade-in').forEach((el, i) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Section titles animation
+    gsap.utils.toArray('.section-title').forEach(title => {
+      gsap.fromTo(title,
+        { opacity: 0, y: 50, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: title,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Service items hover effect with stagger
+    const serviceItems = document.querySelectorAll('.service-item');
+    serviceItems.forEach((item, i) => {
+      item.addEventListener('mouseenter', () => {
+        gsap.to(item, {
+          x: 10,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+      item.addEventListener('mouseleave', () => {
+        gsap.to(item, {
+          x: 0,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Project cards animation
+    gsap.utils.toArray('.project-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 80, rotateY: 5 },
+        {
+          opacity: 1,
+          y: 0,
+          rotateY: 0,
+          duration: 1,
+          delay: i * 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Magnetic button effect
+    const magneticBtns = document.querySelectorAll('.magnetic-btn');
+    magneticBtns.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0) scale(1)';
+      });
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Chat functions
+    const API_KEY = '1b2cbdcb76ee41189e8417f54a9b03d0.lRPtV0BFTOUU1Dbf';
+    const API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+    const model = 'glm-4-flash';
+
+    let isChatOpen = false;
+
+    function toggleChat() {
+      isChatOpen = !isChatOpen;
+      const dialog = document.getElementById('chatDialog');
+      const bubble = document.getElementById('chatBubble');
+      if (isChatOpen) {
+        dialog.style.display = 'block';
+        bubble.style.display = 'none';
+      } else {
+        dialog.style.display = 'none';
+        bubble.style.display = 'block';
+      }
+    }
+
+    function addMessage(content, isUser = false) {
+      const messages = document.getElementById('chatMessages');
+      const msgDiv = document.createElement('div');
+      if (isUser) {
+        msgDiv.style.cssText = 'background: rgba(138, 92, 245, 0.3); padding: 16px; border-radius: 16px; max-width: 80%; align-self: flex-end;';
+      } else {
+        msgDiv.style.cssText = 'background: rgba(138, 92, 245, 0.2); padding: 16px; border-radius: 16px; max-width: 80%;';
+      }
+      msgDiv.innerHTML = `<p style="color: #D7E2EA; font-size: 14px; line-height: 1.6; margin: 0;">${content}</p>`;
+      messages.appendChild(msgDiv);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, true);
+      input.value = '';
+
+      const contextInfo = `你是吴梦轩的AI助手。请用简洁清晰、分行明确的方式回答关于吴梦轩的问题。
+
+基本信息：
+• 姓名：吴梦轩
+• 性别：女
+• 年龄：23岁
+• 出生：2002年11月
+• 电话：18709571453
+• 邮箱：2894173701@qq.com
+• 学历：本科（天津中德应用技术大学，通信工程，GPA专业前10%）
+
+工作经历：
+• 北京广益集思科技 | 项目管理PM | 2025.04-至今
+  - 主导78个数字人直播间搭建，交付率100%
+  - 波司登、联想等品牌，日GMV达134万
+  - 自主研发AI知识库工具，效率提升50%
+
+• 北京好未来 | 直播运营实习生 | 2024.10-2025.04
+  - 直播盯盘，日均GMV 40万+
+  - 新增粉丝2000+，ROI 2.7
+
+项目：
+• 产品信息自动拆解工具（2026.4-2026.05）
+  - 流程效率提升60%，运营可独立搭建
+
+技能：
+• 数据分析：Excel、SQL、Python
+• 设计工具：PS、AI、剪映
+• 证书：HarmonyOS认证、工业APP中级认证、普通话二乙
+
+个人优势：
+• 1年AI直播经验，擅长数据分析和跨部门协同`;
+
+      try {
+        console.log('Sending request to:', API_URL);
+        console.log('API Key starts with:', API_KEY.substring(0, 10));
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: 'system', content: contextInfo },
+              { role: 'user', content: message }
+            ],
+            temperature: 0.7,
+            max_tokens: 1024,
+            stream: false
+          })
+        });
+
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API Error Response:', errorText);
+          try {
+            const errorData = JSON.parse(errorText);
+            addMessage(`抱歉，服务暂时不可用: ${errorData.error?.message || response.status}`);
+          } catch (e) {
+            addMessage(`抱歉，服务暂时不可用 (${response.status})。请稍后再试。`);
+          }
+          return;
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (data.choices && data.choices[0]) {
+          addMessage(data.choices[0].message.content);
+        } else if (data.error) {
+          console.error('API Error:', data.error);
+          addMessage('抱歉，发生了错误：' + (data.error.message || '未知错误'));
+        } else {
+          addMessage('抱歉，我现在无法回答这个问题。');
+        }
+      } catch (error) {
+        console.error('Network Error:', error);
+        addMessage('抱歉，发生了网络错误，请检查网络连接后重试。');
+      }
+    }
+
+    // Jellybean parallax
+    gsap.utils.toArray('.jellybean').forEach((bean, i) => {
+      gsap.to(bean, {
+        y: () => -50 + Math.sin(Date.now() * 0.001 + i) * 20,
+        x: () => 10 + Math.cos(Date.now() * 0.0008 + i) * 15,
+        rotation: () => Math.sin(Date.now() * 0.001) * 10,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: 'body',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.5
+        }
+      });
+    });
+
+    // Hero title character animation
+    const heroLines = document.querySelectorAll('.hero-title-line span');
+    gsap.fromTo(heroLines,
+      { y: '100%', opacity: 0 },
+      {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out'
+      }
+    );
+
+    // CTA button pulse animation
+    gsap.to('.cta-btn', {
+      scale: 1.02,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    });
+  </script>
+</body>
+
+</html>
